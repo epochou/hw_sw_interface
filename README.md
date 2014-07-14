@@ -1,4 +1,7 @@
 hw_sw_interface
 ===============
 
-self study, through The Hardware/Software Interface(https://class.coursera.org/hwswinterface-002)
+HW/SW interface class of UW through coursera.
+
+For more information about this class, refer to this page:
+https://www.coursera.org/course/hwswinterface
