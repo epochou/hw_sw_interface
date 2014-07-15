@@ -120,7 +120,7 @@ NOTES:
  *   Rating: 1
  */
 int bitAnd(int x, int y) {
-  return 2;
+  return ~((~x)|(~y));
 }
 /* 
  * bitXor - x^y using only ~ and & 
@@ -130,7 +130,9 @@ int bitAnd(int x, int y) {
  *   Rating: 1
  */
 int bitXor(int x, int y) {
-  return 2;
+  int p = x & (~y);
+  int q = (~x) & y;
+  return ~((~p) & (~q));
 }
 /* 
  * thirdBits - return word with every third bit (starting from the LSB) set to 1
@@ -140,7 +142,8 @@ int bitXor(int x, int y) {
  *   Rating: 1
  */
 int thirdBits(void) {
-  return 2;
+  //... 0010 0100 1001
+  return (0x49 << 24) | (0x24 << 16) | (0x92 << 8) |(0x49);   
 }
 // Rating: 2
 /* 
@@ -153,7 +156,9 @@ int thirdBits(void) {
  *   Rating: 2
  */
 int fitsBits(int x, int n) {
-  return 2;
+  //
+  int y = x >> 31;
+  return !(((~x & y) + (~y & x)) >> (n + ~0));
 }
 /* 
  * sign - return 1 if positive, 0 if zero, and -1 if negative
@@ -164,7 +169,8 @@ int fitsBits(int x, int n) {
  *  Rating: 2
  */
 int sign(int x) {
-  return 2;
+  // -1 == 0xffffffff;
+  return x >> 31 | (!!x);
 }
 /* 
  * getByte - Extract byte n from word x
@@ -175,7 +181,8 @@ int sign(int x) {
  *   Rating: 2
  */
 int getByte(int x, int n) {
-  return 2;
+  // n * 8 == n << 3;
+  return x >> (n << 3) & 0xff;
 }
 // Rating: 3
 /* 
@@ -187,7 +194,8 @@ int getByte(int x, int n) {
  *   Rating: 3 
  */
 int logicalShift(int x, int n) {
-  return 2;
+  // x >> n & 0000...1111;
+  return (x >> n) & (~(((1 << 31) >> n)<< 1));
 }
 /* 
  * addOK - Determine if can compute x+y without overflow
@@ -198,7 +206,10 @@ int logicalShift(int x, int n) {
  *   Rating: 3
  */
 int addOK(int x, int y) {
-  return 2;
+  //  sign1 == 1,sign2 == 1, sing(1+2)== 0, return 0;
+  //  sign1 == 0,sign2 == 0, sing(1+2)== 1, return 0;
+  //return ((!(x >> 31))|(!(y >> 31))|(!!((x + y) >> 31))) & ((!!(x >> 31))|(!!(y >> 31))|(!((x+y) >> 31)));
+  return !((!((x >> 31) ^ (y >> 31))) & (((x + y) >> 31) ^ (x >> 31)));
 }
 // Rating: 4
 /* 
@@ -209,7 +220,11 @@ int addOK(int x, int y) {
  *   Rating: 4 
  */
 int bang(int x) {
-  return 2;
+  //if sign == 1, return 0;
+  //if sign == 0, sign(~0 + 1) == sign(0);
+  int m = ((~x + 1) >> 31) & 1;
+  int n = (x >> 31) & 1;
+  return (n ^ 1) & (m ^ n ^ 1);
 }
 // Extra Credit: Rating: 3
 /* 
@@ -220,7 +235,10 @@ int bang(int x) {
  *   Rating: 3
  */
 int conditional(int x, int y, int z) {
-  return 2;
+  // (1 << 31) >> 31 == 0xffffffff;
+  // x == 0, !x ==1;
+  // x > 0, !!x == 1;
+  return ((((!x) << 31) >> 31) & z) + ((((!!x) << 31) >> 31) & y);
 }
 // Extra Credit: Rating: 4
 /*
@@ -232,5 +250,8 @@ int conditional(int x, int y, int z) {
  *   Rating: 4
  */
 int isPower2(int x) {
-  return 2;
+  // x > 0, (x - 1) & x == 0;
+  // x == 0, !!x == 0;
+  // x < 0,!(x >> 31) == 0;
+  return (!((x + (~0)) & x)) & (!(x >> 31)) & (!!x);
 }

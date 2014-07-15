@@ -85,8 +85,9 @@ int intSize() {
   int * intPtr1;
   int * intPtr2;
   // TODO: Write code to compute size of an integer.
-
-  return 2;
+  intPtr1 = intArray;
+  intPtr2 = intArray + 1;
+  return (long int) intPtr2 - (long int) intPtr1;
 }
 
 /*
@@ -97,8 +98,9 @@ int doubleSize() {
   double * doubPtr1;
   double * doubPtr2;
   // TODO: Write code to compute size of a double.
-
-  return 2;
+  doubPtr1 = &doubArray[0];
+  doubPtr2 = &doubArray[1];
+  return (long int)doubPtr2 - (long int)doubPtr1;
 }
 
 /*
@@ -109,8 +111,9 @@ int pointerSize() {
   double ** ptrPtr1;
   double ** ptrPtr2;
   // TODO: Write code to compute size of a pointer.
-
-  return 2;
+  ptrPtr1 = &ptrArray[0];
+  ptrPtr2 = &ptrArray[1];
+  return (long int) ptrPtr2 - (long int) ptrPtr1;
 }
 
 /*
@@ -123,7 +126,7 @@ int changeValue() {
   int * intPtr2;
   // TODO: Write code to change value of intArray[5] to 351 using only
   //       intPtr1 and the + operator.
-
+  *(intPtr1 + 5) = 351;
   return intArray[5];
 }
 
@@ -136,7 +139,7 @@ int changeValue() {
  */
 int withinSameBlock(int * ptr1, int * ptr2) {
   // TODO
-  return 2;
+  return ((long int)ptr1 >> 6) == ((long int)ptr2 >> 6);
 }
 
 /*
@@ -145,7 +148,7 @@ int withinSameBlock(int * ptr1, int * ptr2) {
  */
 int withinArray(int * intArray, int size, int * ptr) {
   // TODO
-  return 2;
+  return ptr >= intArray && ptr <= intArray + size-1;
 }
 /*
  * Return x with the n bits that begin at position p inverted (i.e.,
@@ -153,6 +156,6 @@ int withinArray(int * intArray, int size, int * ptr) {
  * the indices of x to begin with the low-order bit numbered as 0.
  */
 int invert(int x, int p, int n) {
-  // TODO
-  return 2;
+  int a = ((-1) << p) ^ ((-1) << (p + n));
+  return x ^ a ;//  x ^ 0 = x; x ^ (-1) = ~x;
 }
