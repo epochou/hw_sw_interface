@@ -39,8 +39,12 @@ mystery3:
 */
 int get_block_size(void) {
   /* YOUR CODE GOES HERE */
-
-  return -1;
+  flush_cache();
+  addr_t  addr = 0;
+  access_cache(addr);
+  while(access_cache(++addr)) {	  
+  }
+  return addr;
 }
 
 /*
@@ -48,8 +52,26 @@ int get_block_size(void) {
 */
 int get_cache_size(int size) {
   /* YOUR CODE GOES HERE */
-
-  return -1;
+  int blockSize = get_block_size();
+  int b = 1;
+  int cacheSize = blockSize;
+  flush_cache();
+  access_cache(0);
+  while(b) {
+	  addr_t addr = 0;
+	  while( addr <= cacheSize ) {
+		  access_cache(addr);
+		  addr = addr + blockSize;
+	  }
+	  if(!access_cache(0)) {
+		  b = 0;
+	  }
+	  else {
+		  cacheSize = cacheSize + blockSize;
+		  flush_cache();
+	  }  
+  }
+  return cacheSize;
 }
 
 /*
@@ -57,8 +79,28 @@ int get_cache_size(int size) {
 */
 int get_cache_assoc(int size) {
   /* YOUR CODE GOES HERE */
-
-  return -1;
+  flush_cache();
+  access_cache(0);
+  int assoc = 1;
+  int cacheSize = get_cache_size(0);
+  int temp;
+  int b = 1;
+  while(b) {
+	  temp = assoc * cacheSize;
+	  addr_t addr = 0;
+	  while(addr <= temp) {
+		  access_cache(addr);
+		  addr = addr + cacheSize;
+	  }
+	  if(!access_cache(0)) {
+		  b = 0;
+	  }
+	  else {
+		  assoc++;
+		  flush_cache();
+	  }
+  }
+  return assoc;
 }
 
 //// DO NOT CHANGE ANYTHING BELOW THIS POINT
